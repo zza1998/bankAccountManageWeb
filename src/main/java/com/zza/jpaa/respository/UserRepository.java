@@ -6,10 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Serializable> {
     User findByUserName(String username);
 
     User findByIdCard(String idCard);
+
+    List<User> findUsersByIdCardOrPhone(String idCard, String phoneNum);
 }

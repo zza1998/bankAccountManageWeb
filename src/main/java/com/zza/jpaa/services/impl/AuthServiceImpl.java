@@ -97,8 +97,8 @@ public class AuthServiceImpl implements AuthService {
         if (registerVo.getPhoneNum().equals("") || registerVo.getIdCard().equals("")) {
             return ResultData.fail("手机号或身份证错误");
         }
-        User user = userRepository.findByIdCard(registerVo.getIdCard());
-        if (user != null && !user.getId().equals("")) {
+        List<User> hasUsers= userRepository.findUsersByIdCardOrPhone(registerVo.getIdCard(),registerVo.getPhoneNum());
+        if (!hasUsers.isEmpty()) {
             return ResultData.fail("用户已存在");
         }
         String md5pwd = DigestUtils.md5DigestAsHex(registerVo.getPassword().getBytes());

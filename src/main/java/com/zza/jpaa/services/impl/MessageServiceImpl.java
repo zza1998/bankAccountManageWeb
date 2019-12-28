@@ -30,11 +30,16 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public void send(String userId, List<String> sendToId, String msg, MessageTypeEnum type) {
-        if (sendToId.size()==0){
+        if (sendToId.isEmpty()){
             throw new BizException("发送人为空");
         }
         for (String uid:sendToId){
             kafkaTemplate.send(topic,uid,msg);
         }
+    }
+
+    @Override
+    public List<Message> getUserMessages(String userId) {
+        return messageRepository.findAllBySendId(userId);
     }
 }

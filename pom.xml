@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.zza</groupId>
-    <artifactId>jpaa</artifactId>
+    <artifactId>bankAccountManageWeb</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>jpaa</name>
     <description>Demo project for Spring Boot</description>

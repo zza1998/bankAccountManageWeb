@@ -17,17 +17,17 @@ public class ExceptionHand {
 
     @ExceptionHandler(value = Exception.class)
     public ResultData  allExceptionHandle(HttpServletRequest request, Exception e){
+        if(e instanceof BizException){
+            BizException exc = (BizException)e;
+            ResultData resultData = new ResultData<>(exc.getCode(),exc.getData(),exc.getMsg());
+            log.error("业务出错 {}",exc.getMsg(), e);
+            return resultData;
+        }
         log.error(e.getMessage(),e);
         return ResultData.fail("系统错误, 请联系客服人员");
     }
 
-    @ExceptionHandler(value = BizException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResultData myExceptionHandle(HttpServletRequest request, BizException e){
-        ResultData resultData = new ResultData<>(e.getCode(),e.getData(),e.getMsg());
-        log.error("业务出错 {}",e.getMsg(), e);
-        return resultData;
-    }
+
 
 }
 
