@@ -12,12 +12,12 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
   redis:
     host: 127.0.0.1
     port: 6379
-#  kafka:
-#    topic: myMsg
-#    bootstrap-servers: localhost:9091,localhost:9092,localhost:9093
-#    consumer:
-#      group-id: msgGroup
+  kafka:
+    topic: myMsg
+    bootstrap-servers: localhost:9091,localhost:9092,localhost:9093
+    consumer:
+      group-id: msgGroup

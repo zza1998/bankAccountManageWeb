@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -47,8 +48,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResultData login(String userName, String password) {
-        User currUser = userRepository.findByUserName(userName);
-
+        User currUser = userRepository.findByName(userName);
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
         // 密码加密
         if (currUser == null) {
             throw new BizException(BizCode.USER_NOT_EXIST);
@@ -91,24 +92,27 @@ public class AuthServiceImpl implements AuthService {
         if (registerVo.getPassword().length() > 16) {
             return ResultData.fail("密码必须小于16位");
         }
-        if (!IdCardUtil.isValidatedAllIdcard(registerVo.getIdCard())){
-            return ResultData.fail("身份证格式错误");
-        }
-        if (registerVo.getPhoneNum().equals("") || registerVo.getIdCard().equals("")) {
-            return ResultData.fail("手机号或身份证错误");
-        }
-        List<User> hasUsers= userRepository.findUsersByIdCardOrPhone(registerVo.getIdCard(),registerVo.getPhoneNum());
+//        if (!IdCardUtil.isValidatedAllIdcard(registerVo.getIdCard())){
+//            return ResultData.fail("身份证格式错误");
+//        }
+//        if (StringUtils.isEmpty(registerVo.getPhone())) {
+//            retqurn ResultData.fail("手机号格式错误");
+//        }
+        List<User> hasUsers= userRepository.findUsersByName(registerVo.getUserName());
         if (!hasUsers.isEmpty()) {
             return ResultData.fail("用户已存在");
         }
         String md5pwd = DigestUtils.md5DigestAsHex(registerVo.getPassword().getBytes());
         User newUser = User.builder()
-                .userName(registerVo.getUserName())
+                .name(registerVo.getUserName())
                 .createTime(new Date())
                 .password(md5pwd)
-                .email(registerVo.getEmail())
-                .idCard(registerVo.getIdCard())
-                .phone(registerVo.getPhoneNum())
+                .phone(registerVo.getPhone())
+                .introduction(registerVo.getIntroduction())
+                .avatar(StringUtils.isEmpty(registerVo.getAvatar())?
+                        "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif":
+                        registerVo.getAvatar())
+                .role(1)
                 .build();
         userRepository.save(newUser);
         return ResultData.success("注册成功");

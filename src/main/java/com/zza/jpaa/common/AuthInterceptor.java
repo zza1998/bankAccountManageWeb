@@ -48,10 +48,10 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         String token = request.getHeader("Authorization");
         log.debug("token: " + token);
         if (StringUtils.isEmpty(token)) {
-            throw new BizException("token不存在");
+            throw new BizException(50008,"token不存在");
         }
         if (JwtUtil.expireAtDate(token).before(new Date())){
-            throw new BizException("token已过期");
+            throw new BizException(50012,"token已过期");
         }
         UserInfo userInfo = JwtUtil.getUserByToken(token);
 

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class ExceptionHand {
 
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(value = {Exception.class,BizException.class})
     public ResultData  allExceptionHandle(HttpServletRequest request, Exception e){
         if(e instanceof BizException){
             BizException exc = (BizException)e;

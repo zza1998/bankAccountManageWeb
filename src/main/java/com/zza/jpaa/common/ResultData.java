@@ -1,10 +1,7 @@
 package com.zza.jpaa.common;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-
-import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +13,7 @@ public class ResultData<DATA>  {
 
     private int code;
     private DATA data;
-    private String msg;
+    private String message;
 
     public ResultData(int code, DATA data) {
         this.code = code;
@@ -35,14 +32,14 @@ public class ResultData<DATA>  {
     public static ResultData success(String msg) {
         dao.data = null;
         dao.code = SUCCESS;
-        dao.msg = msg;
+        dao.message = msg;
         return dao;
     }
 
     public static ResultData success(String msg, Object data){
         dao.data = data;
         dao.code = SUCCESS;
-        dao.msg = msg;
+        dao.message = msg;
         return dao;
     }
     public static ResultData fail() {
@@ -53,7 +50,7 @@ public class ResultData<DATA>  {
     public static ResultData fail(String msg) {
         dao.data = null;
         dao.code = FAILURE;
-        dao.msg = msg;
+        dao.message = msg;
         return dao;
     }
     public ResultData resultData(int code, DATA data) {

@@ -8,16 +8,23 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BankAccountRepository extends JpaRepository<BankAccount, Serializable> {
 
-    BankAccount findBankAccountByUserIdAndBankId(String userId,String bankId);
 
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "update bank_account set balance = balance + :num where id = :id",nativeQuery = true)
-    void addBalance(Integer num, String id);
+    @Query(value = "update bank_account set balance = balance + :num where card_id = :cardId",nativeQuery = true)
+    void addBalance(Integer num, String cardId);
+
+    @Query(value = "select * from bank_account where status=0 or status = 2",nativeQuery = true)
+    List<BankAccount> findAllList();
+
+    @Query(value = "select * from bank_account where card_id = :cardId and status = 0", nativeQuery = true)
+    Optional<BankAccount> findByCardId(String cardId);
 
 }

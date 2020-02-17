@@ -1,5 +1,7 @@
 package com.zza.jpaa.util;
 
+import org.springframework.util.DigestUtils;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -34,5 +36,11 @@ public class CommonUtil {
         }
 
         return returnList;
+    }
+
+    public static void main(String[] args) {
+        String a = "12345678";
+        String md5pwd = DigestUtils.md5DigestAsHex(a.getBytes());
+        System.out.println(md5pwd);
     }
 }

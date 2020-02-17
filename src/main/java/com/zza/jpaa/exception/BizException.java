@@ -60,7 +60,7 @@ public class BizException extends RuntimeException {
     }
 
     public String toString() {
-        String s = this.getClass().getName() + ", code:" + this.code + (this.msg == null ? "" : ",msg:" + this.msg);
+        String s = this.getClass().getName() + ", code:" + this.code + (this.msg == null ? "" : ",message:" + this.msg);
         String message = this.getLocalizedMessage();
         return message != null ? s + ": " + message : s;
     }
