@@ -36,8 +36,25 @@ public class MoneyServiceImpl implements MoneyService {
     }
 
     @Override
-    public List<BalanceDto> getBalance(String userId) {
+    public BalanceDto getBalance(String id) {
+        Optional<BankAccount> byId = bankAccountRepository.findByCardId(id);
+        if (!byId.isPresent()){
+            throw new BizException("账户不存在");
+        }
+        BankAccount account = byId.get();
+        return new BalanceDto(account.getBalance(),account.getBankCode().getBankName());
+    }
 
-        return null;
+    @Override
+    public String reduceMoney(SaveMoneyVo saveMoneyVo, String operateId) {
+        Optional<BankAccount> account =bankAccountRepository.findByCardId(saveMoneyVo.getCardId());
+        if (!account.isPresent()){
+            throw new BizException(BizCode.BANK_ACCOUNT_NOT_FIND);
+        }
+        if (account.get().getBalance().compareTo(BigDecimal.valueOf(saveMoneyVo.getNum()))<1){
+            throw new BizException("账户余额不足");
+        }
+        bankAccountRepository.reduceBalance(saveMoneyVo.getNum(),saveMoneyVo.getCardId());
+        return "success";
     }
 }

@@ -21,6 +21,11 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Serial
     @Query(value = "update bank_account set balance = balance + :num where card_id = :cardId",nativeQuery = true)
     void addBalance(Integer num, String cardId);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update bank_account set balance = balance - :num where card_id = :cardId",nativeQuery = true)
+    void reduceBalance(Integer num, String cardId);
+
     @Query(value = "select * from bank_account where status=0 or status = 2",nativeQuery = true)
     List<BankAccount> findAllList();
 

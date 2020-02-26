@@ -4,7 +4,9 @@ import org.springframework.util.DigestUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CommonUtil {
@@ -39,8 +41,8 @@ public class CommonUtil {
     }
 
     public static void main(String[] args) {
-        String a = "12345678";
-        String md5pwd = DigestUtils.md5DigestAsHex(a.getBytes());
-        System.out.println(md5pwd);
+        BigDecimal bigDecimal = new BigDecimal(2);
+        BigDecimal bigDecimal1 = new BigDecimal(3);
+        System.out.println(bigDecimal.compareTo(bigDecimal1));
     }
 }
