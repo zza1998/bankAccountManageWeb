@@ -17,6 +17,8 @@ public class RegisterVo {
     private String userName;
     private String password;
     private String avatar;
+    private String invitedCode;
+    private Integer userType;
     private String phone;
     private String introduction;
 }

@@ -12,11 +12,16 @@ import java.io.Serializable;
 @Table(name = "bank")
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class Bank implements Serializable {
+
     @Id
-    @GenericGenerator(name = "idGenerator", strategy = "uuid")
-    @GeneratedValue(generator = "idGenerator")
     private String id;
 
     @Column(name = "bank_name", length = 100, nullable = false)
     private String bankName;
+
+    @Column(name = "address", length = 100)
+    private String address;
+
+    @Column(name = "introduce", length = 500)
+    private String introduce;
 }

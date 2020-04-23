@@ -1,15 +1,17 @@
 package com.zza.jpaa.services.impl;
 
 import com.zza.jpaa.common.ResultData;
+import com.zza.jpaa.entity.InviteCode;
 import com.zza.jpaa.entity.User;
 import com.zza.jpaa.entity.dto.UserInfo;
 import com.zza.jpaa.entity.vo.RegisterVo;
 import com.zza.jpaa.exception.BizCode;
 import com.zza.jpaa.exception.BizException;
+import com.zza.jpaa.respository.InvitedCodeRepository;
 import com.zza.jpaa.respository.UserRepository;
 import com.zza.jpaa.services.AuthService;
+import com.zza.jpaa.services.InvitedCodeService;
 import com.zza.jpaa.services.RedisService;
-import com.zza.jpaa.util.IdCardUtil;
 import com.zza.jpaa.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +34,8 @@ public class AuthServiceImpl implements AuthService {
     @Resource
     RedisService redisService;
 
+    @Resource
+    InvitedCodeRepository invitedCodeRepository;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -102,6 +106,17 @@ public class AuthServiceImpl implements AuthService {
         if (!hasUsers.isEmpty()) {
             return ResultData.fail("用户已存在");
         }
+        String invitedCode = registerVo.getInvitedCode();
+        if (registerVo.getUserType() == 1){
+            if (StringUtils.isEmpty(invitedCode)){
+                return ResultData.fail("管理员用户必须输入邀请码");
+            }
+            Optional<InviteCode> code =
+                    invitedCodeRepository.findByUserNameAndStatus(registerVo.getUserName(), 0);
+            if (!code.isPresent()){
+                return ResultData.fail("请输入正确的邀请码");
+            }
+        }
         String md5pwd = DigestUtils.md5DigestAsHex(registerVo.getPassword().getBytes());
         User newUser = User.builder()
                 .name(registerVo.getUserName())
@@ -112,9 +127,13 @@ public class AuthServiceImpl implements AuthService {
                 .avatar(StringUtils.isEmpty(registerVo.getAvatar())?
                         "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif":
                         registerVo.getAvatar())
-                .role(1)
+                .role(registerVo.getUserType())
                 .build();
         userRepository.save(newUser);
+        // 使邀请码过期
+        if(registerVo.getUserType() == 1){
+            invitedCodeRepository.usingInvitedCode(invitedCode,registerVo.getUserName());
+        }
         return ResultData.success("注册成功");
     }
 }

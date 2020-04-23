@@ -1,40 +1,37 @@
 package com.zza.jpaa.entity;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Data
+@Builder
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Builder
-@Table(name = "message")
-public class Message {
+@Table(name = "customers")
+public class Customer {
 
-    @Column(name = "id")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GenericGenerator(name = "idGenerator", strategy = "uuid")
+    @GeneratedValue(generator = "idGenerator")
+    private String id;
 
-    @Column(name = "message", length = 1000)
-    private String msg;
+    @Column(name = "name",length = 20)
+    private String name;
 
-    @Column(name = "user_id")
-    private String userId;
+    @Column(name = "id_card",length = 30)
+    private String idCard;
 
-    @Column(name = "title", length = 100)
-    private String title;
-
-    @Column(name = "status",length = 10)
-    private Integer status;
+    @Column(name = "phone", length = 50)
+    private String phone;
 
     @Column(name = "create_time")
     @Temporal(TemporalType.TIMESTAMP)
@@ -45,7 +42,4 @@ public class Message {
     @Temporal(TemporalType.TIMESTAMP)
     @UpdateTimestamp
     private Date updateTime;
-
-
-
 }

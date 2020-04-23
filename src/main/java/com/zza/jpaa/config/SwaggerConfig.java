@@ -33,7 +33,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 //页面标题
-                .title("Spring Boot Swagger2 构建RESTful API")
+                .title("银行账户管理系统后台")
                 //条款地址
                 .termsOfServiceUrl("http://despairyoke.github.io/")
                 .contact("zwd")

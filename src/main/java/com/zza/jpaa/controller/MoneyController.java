@@ -1,7 +1,6 @@
 package com.zza.jpaa.controller;
 
 import com.zza.jpaa.annotion.CurrentUser;
-import com.zza.jpaa.annotion.IgnoreSecurity;
 import com.zza.jpaa.common.ResultData;
 import com.zza.jpaa.entity.dto.BalanceDto;
 import com.zza.jpaa.entity.dto.UserInfo;
@@ -14,8 +13,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.util.List;
 
 @Api(tags = "账户金额操作")
 @RestController
