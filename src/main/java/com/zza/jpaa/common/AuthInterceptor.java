@@ -1,6 +1,7 @@
 package com.zza.jpaa.common;
 
 import com.zza.jpaa.annotion.IgnoreSecurity;
+import com.zza.jpaa.config.UserInfoConfig;
 import com.zza.jpaa.entity.dto.UserInfo;
 import com.zza.jpaa.exception.BizException;
 import com.zza.jpaa.services.UserService;
@@ -22,8 +23,6 @@ import java.util.Date;
 @Component
 public class AuthInterceptor extends HandlerInterceptorAdapter {
 
-    // @Resource
-    // private  UserService userService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -51,10 +50,10 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             throw new BizException(50008,"token不存在");
         }
         if (JwtUtil.expireAtDate(token).before(new Date())){
-            throw new BizException(50012,"token已过期");
+            throw new BizException(50012,"登录已失效");
         }
         UserInfo userInfo = JwtUtil.getUserByToken(token);
-
+        UserInfoConfig.currUserInfos.set(userInfo);
         log.info("user: {}" ,userInfo);
         request.setAttribute("currentUser", userInfo);
         return true;

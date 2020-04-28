@@ -1,6 +1,8 @@
 package com.zza.jpaa.services.impl;
 
 import com.zza.jpaa.common.ResultData;
+import com.zza.jpaa.config.UserInfoConfig;
+import com.zza.jpaa.constant.enums.OperaTypeEnum;
 import com.zza.jpaa.entity.InviteCode;
 import com.zza.jpaa.entity.User;
 import com.zza.jpaa.entity.dto.InvitedCodeDto;
@@ -9,6 +11,7 @@ import com.zza.jpaa.exception.BizException;
 import com.zza.jpaa.respository.InvitedCodeRepository;
 import com.zza.jpaa.respository.UserRepository;
 import com.zza.jpaa.services.InvitedCodeService;
+import com.zza.jpaa.services.LogService;
 import com.zza.jpaa.util.PersonlStringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,9 +33,13 @@ public class InvitedCodeServiceImpl implements InvitedCodeService {
     @Resource
     UserRepository userRepository;
 
+    @Resource
+    LogService logService;
+
     private static int CODE_LENGTH = 1 << 3;
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
     @Override
     public InvitedCodeDto createCode(String account) {
         Optional<User> optionalUser = userRepository.findByNameEqualsAndRoleEquals(account, RoleEnum.ADMIN.getCode());
@@ -45,7 +52,7 @@ public class InvitedCodeServiceImpl implements InvitedCodeService {
         // 判断是否已有激活码
         Optional<InviteCode> optCode = invitedCodeRepository.findByUserNameAndStatus(account, 0);
         if (optCode.isPresent()) {
-            throw new BizException("用户激活码已存在，请勿重复生成");
+            throw new BizException("用户已激活或激活码已存在，请勿重复生成");
         }
         // 生成随机邀请码
         String code = PersonlStringUtil.makeRandomString(CODE_LENGTH);
@@ -59,7 +66,7 @@ public class InvitedCodeServiceImpl implements InvitedCodeService {
 
         // 存储邀请码
         invitedCodeRepository.save(inviteCode);
-
+        logService.doLog(OperaTypeEnum.CREATE_CODE, UserInfoConfig.currUserInfos.get().getUserId());
         return InvitedCodeDto.builder()
                 .account(account)
                 .code(code)
@@ -71,9 +78,15 @@ public class InvitedCodeServiceImpl implements InvitedCodeService {
     public ResultData deleteCode(String id) {
         Optional<InviteCode> optById = invitedCodeRepository.findById(id);
         if (optById.isPresent()) {
+            if (optById.get().getStatus() == 1) {
+                throw new BizException("账户已使用，无法删除");
+            }
             log.info("删除激活码 {}", optById.get().toString());
             invitedCodeRepository.deleteById(id);
+        } else {
+            throw new BizException("邀请码不存在");
         }
+        logService.doLog(OperaTypeEnum.DEL_CODE);
         return ResultData.success("删除成功");
     }
 

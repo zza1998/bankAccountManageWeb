@@ -1,6 +1,7 @@
 package com.zza.jpaa.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,6 +12,7 @@ import java.util.Date;
 
 @Data
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "statistic_data")
@@ -23,19 +25,19 @@ public class StatisticData {
     private String id;
 
     @Column(name = "add_user")
-    private Integer addUser;
+    private Long addUser;
 
     @Column(name = "all_user")
-    private Integer allUser;
+    private Long allUser;
 
     @Column(name = "user_with_account")
-    private Integer usersWithAccount;
+    private Long usersWithAccount;
 
     @Column(name = "add_account")
-    private Integer addAccount;
+    private Long addAccount;
 
     @Column(name = "all_account")
-    private Integer allAccount;
+    private Long allAccount;
 
     @Column(name = "create_time")
     @Temporal(TemporalType.TIMESTAMP)

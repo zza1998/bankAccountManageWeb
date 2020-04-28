@@ -27,8 +27,6 @@ public class UserController {
     @Resource
     private UserService userService;
 
-    @Resource
-    private CustomerRepository customerRepository;
 
     @PostMapping("/save")
     public User saveUser(@RequestBody User user){

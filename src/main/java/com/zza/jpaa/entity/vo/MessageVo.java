@@ -13,11 +13,10 @@ import java.util.List;
 @ToString
 public class MessageVo {
 
-    private String userId;
+    private String content;
 
-    private String msg;
+    private String title;
 
     private String type;
 
-    private List<String> users;
 }

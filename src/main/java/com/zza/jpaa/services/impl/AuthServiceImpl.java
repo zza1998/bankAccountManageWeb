@@ -1,6 +1,8 @@
 package com.zza.jpaa.services.impl;
 
 import com.zza.jpaa.common.ResultData;
+import com.zza.jpaa.config.UserInfoConfig;
+import com.zza.jpaa.constant.enums.OperaTypeEnum;
 import com.zza.jpaa.entity.InviteCode;
 import com.zza.jpaa.entity.User;
 import com.zza.jpaa.entity.dto.UserInfo;
@@ -11,6 +13,7 @@ import com.zza.jpaa.respository.InvitedCodeRepository;
 import com.zza.jpaa.respository.UserRepository;
 import com.zza.jpaa.services.AuthService;
 import com.zza.jpaa.services.InvitedCodeService;
+import com.zza.jpaa.services.LogService;
 import com.zza.jpaa.services.RedisService;
 import com.zza.jpaa.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +38,9 @@ public class AuthServiceImpl implements AuthService {
     RedisService redisService;
 
     @Resource
+    LogService logService;
+
+    @Resource
     InvitedCodeRepository invitedCodeRepository;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
@@ -43,12 +49,6 @@ public class AuthServiceImpl implements AuthService {
 
     private final static Long fiveMillion = 60 * 5 * 1000L;
 
-    private User ThisCurrUser;
-
-    @Bean
-    public User getCurrUser(){
-       return ThisCurrUser;
-    }
 
     @Override
     public ResultData login(String userName, String password) {
@@ -79,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
         Boolean isLogin = redisTemplate.opsForValue()
                 .setIfAbsent(currUser.getId()+":token",token,JwtUtil.expire, TimeUnit.MILLISECONDS);
         // 如果已经登录不用重新获取新的token
-        if (!isLogin.booleanValue()){
+        if (isLogin!=null && isLogin){
            token = (String) redisTemplate.opsForValue().get(currUser.getId()+":token");
         }
         redisService.setValue(currUser.getId(), "0");
@@ -87,7 +87,8 @@ public class AuthServiceImpl implements AuthService {
         map.put("token", token);
         map.put("expireAt", JwtUtil.expireAt(token));
         log.info("用户登录 {}",map);
-        ThisCurrUser = currUser;
+        // 记录日志
+        logService.doLog(OperaTypeEnum.LOGIN, currUser.getId(),null);
         return ResultData.success("登陆成功", map);
     }
 
@@ -96,12 +97,6 @@ public class AuthServiceImpl implements AuthService {
         if (registerVo.getPassword().length() > 16) {
             return ResultData.fail("密码必须小于16位");
         }
-//        if (!IdCardUtil.isValidatedAllIdcard(registerVo.getIdCard())){
-//            return ResultData.fail("身份证格式错误");
-//        }
-//        if (StringUtils.isEmpty(registerVo.getPhone())) {
-//            retqurn ResultData.fail("手机号格式错误");
-//        }
         List<User> hasUsers= userRepository.findUsersByName(registerVo.getUserName());
         if (!hasUsers.isEmpty()) {
             return ResultData.fail("用户已存在");

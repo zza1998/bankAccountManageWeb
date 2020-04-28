@@ -29,8 +29,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResultData login(@RequestBody LoginVo loginVo, HttpServletRequest request , HttpServletResponse response)
     {
-        System.out.println(request);
-        System.out.println(loginVo);
         if (StringUtils.isEmpty(loginVo.getUsername()) || StringUtils.isEmpty(loginVo.getPassword())) {
             throw new BizException(BizCode.USER_MSG_NULL);
         }

@@ -25,7 +25,18 @@ public class MessageController {
     @GetMapping("/list")
     public ResultData getMessages(@CurrentUser UserInfo userInfo){
         List<MessageDto> userMessages = messageService.getUserMessages(userInfo.getUserId(), false);
-
         return ResultData.success("获取成功",userMessages);
+    }
+
+    @PostMapping("/send")
+    public ResultData sendMessage(@CurrentUser UserInfo userInfo, @RequestBody MessageVo messageVo){
+        messageService.send(userInfo.getUserId(),messageVo.getTitle(),messageVo.getContent());
+        return ResultData.success("发送成功");
+    }
+
+    @PostMapping("/del/{id}")
+    public ResultData delMessage(@PathVariable(value = "id") Integer id){
+        messageService.delMessage(id);
+        return ResultData.success("删除成功");
     }
 }

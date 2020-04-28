@@ -24,7 +24,6 @@ public class InvitedCodeController {
     @PostMapping("/create")
     public ResultData createCode(@RequestBody CreateInvitedCodeVo codeVo) {
         InvitedCodeDto code = invitedCodeService.createCode(codeVo.getAccount());
-
         return ResultData.success("创建成功", code);
     }
 
@@ -33,6 +32,7 @@ public class InvitedCodeController {
     public ResultData delCode(@PathVariable("id") String id) {
         return invitedCodeService.deleteCode(id);
     }
+
 
     @ApiOperation(value = "获取列表", notes = "getCodeList")
     @GetMapping("/list")

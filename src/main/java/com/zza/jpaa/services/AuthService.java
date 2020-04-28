@@ -10,5 +10,4 @@ public interface AuthService {
 
     ResultData register(RegisterVo registerVo);
 
-    User getCurrUser();
 }

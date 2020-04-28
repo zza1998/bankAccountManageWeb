@@ -32,6 +32,9 @@ public class OperatorLog {
     @Column(name = "opera_user_id")
     private String operaUserId;
 
+    @Column(name = "opera_username",length = 50)
+    private String operaUserName;
+
     @Column(name = "number",columnDefinition = "decimal(9,2)")
     private BigDecimal number;
 
@@ -39,4 +42,5 @@ public class OperatorLog {
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private Date createTime;
+
 }

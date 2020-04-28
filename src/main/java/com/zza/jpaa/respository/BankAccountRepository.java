@@ -1,6 +1,7 @@
 package com.zza.jpaa.respository;
 
 import com.zza.jpaa.entity.BankAccount;
+import com.zza.jpaa.entity.dto.StatisticAccountByBankDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository

@@ -1,5 +1,7 @@
 package com.zza.jpaa.services.impl;
 
+import com.zza.jpaa.config.UserInfoConfig;
+import com.zza.jpaa.constant.enums.OperaTypeEnum;
 import com.zza.jpaa.entity.BankAccount;
 import com.zza.jpaa.entity.User;
 import com.zza.jpaa.entity.dto.AccountDto;
@@ -12,8 +14,10 @@ import com.zza.jpaa.exception.BizException;
 import com.zza.jpaa.respository.BankAccountRepository;
 import com.zza.jpaa.respository.UserRepository;
 import com.zza.jpaa.services.AccountService;
+import com.zza.jpaa.services.LogService;
 import com.zza.jpaa.util.IdCardUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +39,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Resource
     UserRepository userRepository;
+
+    @Resource
+    LogService logService;
+
 
     @Override
     @Transactional
@@ -67,6 +75,7 @@ public class AccountServiceImpl implements AccountService {
                 .build();
 
         bankAccountRepository.save(account);
+        logService.doLog(OperaTypeEnum.CREATE_ACCOUNT,userInfo.getUserId(),null);
     }
 
     @Override
@@ -143,8 +152,15 @@ public class AccountServiceImpl implements AccountService {
         if (!account.isPresent()||account.get().getStatus().equals(1)) {
             throw new BizException("账户不存在");
         }
+
         BankAccount bankAccount = account.get();
         bankAccount.setStatus(status);
         bankAccountRepository.save(bankAccount);
+        if (status.equals(1))
+            logService.doLog(OperaTypeEnum.DELETE_ACCOUNT, UserInfoConfig.currUserInfos.get().getUserId(),null);
+        if (status.equals(0))
+            logService.doLog(OperaTypeEnum.UNFREEZE_ACCOUNT, UserInfoConfig.currUserInfos.get().getUserId(),null);
+        if (status.equals(2))
+            logService.doLog(OperaTypeEnum.FROZEN_ACCOUNT, UserInfoConfig.currUserInfos.get().getUserId(),null);
     }
 }
