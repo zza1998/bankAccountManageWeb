@@ -16,18 +16,18 @@ public class springAop {
     private void printCut(){
 
     }
-//
-//    @Around("printCut()")
-//    public Object executeLog(ProceedingJoinPoint point){
-//        long start = System.currentTimeMillis();
-//        Object proceed = null;
-//        try{
-//           proceed = point.proceed();
-//        } catch (Throwable e){
-//            e.printStackTrace();
-//        }
-//        long end = System.currentTimeMillis();
-//        System.out.println("耗时 + "+ (end-start) );
-//        return proceed;
-//    }
+
+    @Around("@within(org.springframework.web.bind.annotation.RestController)")
+    public Object executeLog(ProceedingJoinPoint point){
+        long start = System.currentTimeMillis();
+        Object proceed = null;
+        try{
+           proceed = point.proceed();
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("耗时 + "+ (end-start) );
+        return proceed;
+    }
 }

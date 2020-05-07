@@ -13,4 +13,6 @@ public class UserInfo {
     private String userId;
     private String name;
     private String password;
+    private Integer role;
+    private String idCardNum;
 }

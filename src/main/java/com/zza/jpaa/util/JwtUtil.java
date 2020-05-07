@@ -22,6 +22,7 @@ public class JwtUtil {
         token = JWT.create().withAudience(userInfo.getUserId())
                 .withClaim("id",userInfo.getUserId())
                 .withClaim("userName",userInfo.getName())
+                .withClaim("role",userInfo.getRole())
                 .withExpiresAt(date)
                 .sign(Algorithm.HMAC256("password"));
         return token;
@@ -48,6 +49,7 @@ public class JwtUtil {
         UserInfo userInfo = UserInfo.builder()
                 .userId(decodedJWT.getClaim("id").asString())
                 .name(decodedJWT.getClaim("userName").asString())
+                .role(decodedJWT.getClaim("role").asInt())
                 .build();
         return userInfo;
     }
@@ -59,5 +61,6 @@ public class JwtUtil {
         date.setTime(date.getTime()+expire);
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
         System.out.println(sdf.format(date));
+
     }
 }

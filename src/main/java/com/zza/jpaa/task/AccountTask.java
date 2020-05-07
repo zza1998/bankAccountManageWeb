@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.lang.annotation.Repeatable;
 import java.util.Date;
 import java.util.List;
 
@@ -49,4 +50,5 @@ public class AccountTask {
         statisticDataRepository.save(build);
         log.info("========================统计完毕平台账号信息====================");
     }
+
 }

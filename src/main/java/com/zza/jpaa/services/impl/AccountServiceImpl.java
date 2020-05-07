@@ -75,7 +75,7 @@ public class AccountServiceImpl implements AccountService {
                 .build();
 
         bankAccountRepository.save(account);
-        logService.doLog(OperaTypeEnum.CREATE_ACCOUNT,userInfo.getUserId(),null);
+        logService.doLog(OperaTypeEnum.CREATE_ACCOUNT, userInfo.getUserId(), null);
     }
 
     @Override
@@ -88,6 +88,12 @@ public class AccountServiceImpl implements AccountService {
         List<AccountDto> accountDtos = new ArrayList<>();
         PageDto<AccountDto> pageDto = new PageDto<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//        if (UserInfoConfig.currUserInfos.get().getRole() != 1) {
+//            accountList = accountList.stream()
+//                    .filter((o) -> o.getUserName()
+//                            .equals(UserInfoConfig.currUserInfos.get().getName()))
+//                    .collect(Collectors.toList());
+//        }
         accountList.forEach((o) -> {
             String operateName = users.stream()
                     .filter((u) -> u.getId().equals(o.getOperateId()))
@@ -106,6 +112,7 @@ public class AccountServiceImpl implements AccountService {
                     .build()
             );
         });
+
         // 筛选查询
         List<AccountDto> resultList = accountDtos;
         if (pageSearchVo.getFilter() != null && !pageSearchVo.getFilter().equals("")) {
@@ -127,8 +134,8 @@ public class AccountServiceImpl implements AccountService {
                 resultList = resultList.stream().sorted((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime())).
                         collect(Collectors.toList());
             }
-
         }
+
         // 分页
         pageDto.setCurrPage(pageSearchVo.getPageIndex());
         pageDto.setTotalCount(resultList.size());
@@ -149,7 +156,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void changeAccount(String id, Integer status) {
         Optional<BankAccount> account = bankAccountRepository.findById(id);
-        if (!account.isPresent()||account.get().getStatus().equals(1)) {
+        if (!account.isPresent() || account.get().getStatus().equals(1)) {
             throw new BizException("账户不存在");
         }
 
@@ -157,10 +164,10 @@ public class AccountServiceImpl implements AccountService {
         bankAccount.setStatus(status);
         bankAccountRepository.save(bankAccount);
         if (status.equals(1))
-            logService.doLog(OperaTypeEnum.DELETE_ACCOUNT, UserInfoConfig.currUserInfos.get().getUserId(),null);
+            logService.doLog(OperaTypeEnum.DELETE_ACCOUNT, UserInfoConfig.currUserInfos.get().getUserId(), null);
         if (status.equals(0))
-            logService.doLog(OperaTypeEnum.UNFREEZE_ACCOUNT, UserInfoConfig.currUserInfos.get().getUserId(),null);
+            logService.doLog(OperaTypeEnum.UNFREEZE_ACCOUNT, UserInfoConfig.currUserInfos.get().getUserId(), null);
         if (status.equals(2))
-            logService.doLog(OperaTypeEnum.FROZEN_ACCOUNT, UserInfoConfig.currUserInfos.get().getUserId(),null);
+            logService.doLog(OperaTypeEnum.FROZEN_ACCOUNT, UserInfoConfig.currUserInfos.get().getUserId(), null);
     }
 }

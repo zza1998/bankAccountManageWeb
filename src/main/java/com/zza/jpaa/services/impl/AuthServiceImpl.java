@@ -24,6 +24,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +43,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Resource
     InvitedCodeRepository invitedCodeRepository;
+
+
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -75,6 +78,7 @@ public class AuthServiceImpl implements AuthService {
                 .userId(currUser.getId())
                 .name(userName)
                 .password(password)
+                .role(currUser.getRole())
                 .build());
         Boolean isLogin = redisTemplate.opsForValue()
                 .setIfAbsent(currUser.getId()+":token",token,JwtUtil.expire, TimeUnit.MILLISECONDS);

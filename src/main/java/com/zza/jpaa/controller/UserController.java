@@ -2,20 +2,24 @@ package com.zza.jpaa.controller;
 
 import com.zza.jpaa.annotion.CurrentUser;
 import com.zza.jpaa.common.ResultData;
+import com.zza.jpaa.config.UserInfoConfig;
 import com.zza.jpaa.entity.Customer;
 import com.zza.jpaa.entity.User;
 import com.zza.jpaa.entity.dto.UserInfo;
 import com.zza.jpaa.entity.dto.UserInfoDto;
+import com.zza.jpaa.entity.vo.ModifyUserVo;
 import com.zza.jpaa.exception.BizCode;
 import com.zza.jpaa.exception.BizException;
 import com.zza.jpaa.respository.CustomerRepository;
 import com.zza.jpaa.respository.UserRepository;
 import com.zza.jpaa.services.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -47,10 +51,9 @@ public class UserController {
         userRepository.deleteById(userId);
     }
 
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable("id") String userId, @RequestBody User user) {
-        user.setId(userId);
-        return userRepository.saveAndFlush(user);
+    @PostMapping("/modify")
+    public ResultData updateUser(@RequestBody ModifyUserVo modifyUserVo) {
+       return userService.modifyUserInfo(modifyUserVo);
     }
     @GetMapping("/info")
     public ResultData getUserInfo(@CurrentUser UserInfo userInfo){

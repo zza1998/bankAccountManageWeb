@@ -218,7 +218,7 @@ public class IdCardUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println( IdCardUtil.isValidatedAllIdcard("331002199808112058"));
+        System.out.println(IdCardUtil.isValidatedAllIdcard("331002199808112058"));
         System.out.println(IdCardUtil.getUserSex("331002199808112058"));
     }
 }

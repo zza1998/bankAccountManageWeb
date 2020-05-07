@@ -16,8 +16,10 @@ public class UserInfoDto {
 
     private String avatar;
 
-    private String introdution;
+    private String introduction;
 
     private String name;
+
+    private String phone;
 
 }
