@@ -30,7 +30,7 @@ public class MoneyServiceImpl implements MoneyService {
     LogService logService;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String saveMoney(SaveMoneyVo saveMoneyVo, String operateId) {
         Optional<BankAccount> account = bankAccountRepository.findByCardId(saveMoneyVo.getCardId());
         if (!account.isPresent()){
@@ -53,6 +53,7 @@ public class MoneyServiceImpl implements MoneyService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String reduceMoney(SaveMoneyVo saveMoneyVo, String operateId) {
         Optional<BankAccount> account =bankAccountRepository.findByCardId(saveMoneyVo.getCardId());
         if (!account.isPresent()){

@@ -31,8 +31,8 @@ public class AccountController {
 
     @ApiOperation("销户  /  冻结")
     @PostMapping("/status/{id}")
-    public ResultData changeAccount(@PathVariable String id, @RequestParam("status") Integer status) {
-        accountService.changeAccount(id,status);
+    public ResultData changeAccount(@PathVariable String id, @RequestParam(value = "status") Integer status) {
+        accountService.changeAccount(id, status);
         return ResultData.success("操作成功");
     }
 

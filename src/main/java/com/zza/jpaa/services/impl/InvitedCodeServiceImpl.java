@@ -54,6 +54,7 @@ public class InvitedCodeServiceImpl implements InvitedCodeService {
         if (optCode.isPresent()) {
             throw new BizException("用户已激活或激活码已存在，请勿重复生成");
         }
+
         // 生成随机邀请码
         String code = PersonlStringUtil.makeRandomString(CODE_LENGTH);
         Date now = new Date();
@@ -92,7 +93,6 @@ public class InvitedCodeServiceImpl implements InvitedCodeService {
 
     @Override
     public List<InvitedCodeDto> codeList() {
-
         List<InviteCode> all = invitedCodeRepository.findAll();
         return all.stream()
                 .map(this::mapTo)

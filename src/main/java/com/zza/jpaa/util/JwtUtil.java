@@ -13,6 +13,10 @@ import java.util.Date;
 
 public class JwtUtil {
 
+    public JwtUtil(){
+        throw new AssertionError("no jwtUtil instance for you !");
+    }
+
     public final  static  Long expire =  30 * 60 * 1000L;
 
     public static String getToken(UserInfo userInfo) {
@@ -54,13 +58,6 @@ public class JwtUtil {
         return userInfo;
     }
 
-    public static void main(String[] args) {
-       String token = JWT.create().withAudience("aaaaaaaid")
-                .sign(Algorithm.HMAC256("password"));
-        Date date = new Date();
-        date.setTime(date.getTime()+expire);
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
-        System.out.println(sdf.format(date));
 
-    }
+
 }

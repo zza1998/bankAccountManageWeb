@@ -63,7 +63,7 @@ public class UserController {
 
 
     @PostMapping("/list")
-    public Page<User> pageQuery(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+    public Page<User> pageQuery(@RequestParam(value = "pageIndex", defaultValue = "1") Integer pageNum,
                                 @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
         return userRepository.findAll(PageRequest.of(pageNum - 1, pageSize));
     }

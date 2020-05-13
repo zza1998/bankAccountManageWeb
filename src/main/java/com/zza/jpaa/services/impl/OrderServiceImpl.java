@@ -7,6 +7,7 @@ import com.zza.jpaa.entity.vo.PageSearchVo;
 import com.zza.jpaa.exception.BizException;
 import com.zza.jpaa.respository.OrderRepository;
 import com.zza.jpaa.services.OrderService;
+import com.zza.jpaa.util.IdCardUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -24,6 +25,9 @@ public class OrderServiceImpl implements OrderService {
     public void saveOrders(OrderVo orderVo) {
         if (orderVo.getType().length <= 0) {
             throw new BizException("请输入正确的预约类型");
+        }
+        if (IdCardUtil.isValidate18Idcard(orderVo.getIdcard())){
+            throw new BizException("请输入正确的身份信息");
         }
         List<Order> ordersByUser = orderRepository.findOrdersByUser(orderVo.getIdcard());
         Map<Integer,Object> types = new HashMap<>();

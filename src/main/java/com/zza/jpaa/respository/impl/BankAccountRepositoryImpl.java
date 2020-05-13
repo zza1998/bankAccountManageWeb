@@ -22,6 +22,7 @@ public class BankAccountRepositoryImpl {
     EntityManager entityManager;
 
 
+    @SuppressWarnings("unchecked")
     public List<StatisticAccountByBankDto> findAccountByBank(){
 
         String sql = "select ba.bank_code bankCode, b.bank_name as name, " +

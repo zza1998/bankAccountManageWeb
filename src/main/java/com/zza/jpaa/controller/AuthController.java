@@ -4,12 +4,15 @@ import com.zza.jpaa.annotion.IgnoreSecurity;
 import com.zza.jpaa.common.ResultData;
 import com.zza.jpaa.entity.vo.LoginVo;
 import com.zza.jpaa.entity.vo.RegisterVo;
+import com.zza.jpaa.entity.vo.TestVo;
 import com.zza.jpaa.exception.BizCode;
 import com.zza.jpaa.exception.BizException;
 import com.zza.jpaa.services.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -46,5 +49,12 @@ public class AuthController {
     @PostMapping("/register")
     public ResultData register(@RequestBody RegisterVo registerVo){
         return authService.register(registerVo);
+    }
+
+    @IgnoreSecurity
+    @GetMapping("/test")
+    public ResultData test(@Validated TestVo testVo, BindingResult bindingResult){
+
+        return ResultData.success("");
     }
 }
